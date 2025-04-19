@@ -1,6 +1,6 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 import NavBar from "../ui/NavBar";
-import AddStoreDisplayModule from "../ui/AddStoreDisplayModule";
+import AddStoreDisplayModule from "../ui/AddStoreLayout/AddStoreDisplayModule";
 
 function AddStore() {
   return (

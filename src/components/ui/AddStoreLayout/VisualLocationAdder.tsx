@@ -1,8 +1,10 @@
 import { Box, Grid, GridItem, HStack } from "@chakra-ui/react";
-import VisualLocationFinder from "./VisualLocationFinder";
+import VisualLocationFinder from "../VisualLocationFinder";
 import SizeSlider from "./SizeSlider";
 import { useEffect, useState } from "react";
 import InputBox from "./InputBox";
+import GridTypeSelector from "./GridTypeSelector";
+import AdditionalDetails from "./AdditionalDetails";
 
 function VisualLocationAdder() {
   const [row, setRow] = useState(1);
@@ -31,17 +33,23 @@ function VisualLocationAdder() {
       "title title"
       "slider slider"
       "visual visual"
-      "picker details"
+      "picker picker"
+      "details details"
     `,
           lg: `
     "title title title"
     "visual slider slider"
-    "visual picker detail"
+    "visual picker picker"
+    "visual details details"
   `,
         }}
         templateColumns={{
           base: "1fr 1fr",
           lg: "500px 1fr",
+        }}
+        templateRows={{
+          base: "1fr 1fr",
+          lg: "1fr",
         }}
         rowGap={5}
         columnGap={6}
@@ -78,10 +86,10 @@ function VisualLocationAdder() {
         </GridItem>
 
         <GridItem area="picker">
-          <h1>pi</h1>
+          <GridTypeSelector />
         </GridItem>
         <GridItem area="details">
-          <h1>de</h1>
+          <AdditionalDetails />
         </GridItem>
       </Grid>
     </Box>

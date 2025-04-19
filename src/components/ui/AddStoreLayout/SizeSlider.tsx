@@ -14,6 +14,7 @@ function SizeSlider({ Orientation, OnValueChange, children }: Props) {
       defaultValue={[1]}
       onValueChange={(val) => OnValueChange(val.value[0])}
       orientation={Orientation}
+      min={1}
       max={30}
       width={250}
     >
