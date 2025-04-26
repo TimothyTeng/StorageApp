@@ -3,21 +3,23 @@ import { useRef } from "react";
 import { MdDriveFileRenameOutline } from "react-icons/md";
 
 interface Props {
-  onSearch: (res: String) => void;
+  OnChange: (res: String) => void;
   children: string;
 }
 
-function InputBox({ onSearch, children }: Props) {
+function InputBox({ OnChange, children }: Props) {
   const ref = useRef<HTMLInputElement>(null);
   return (
     <form
       onSubmit={(event) => {
         event.preventDefault();
-        if (ref.current) onSearch(ref.current.value);
+      }}
+      onChange={() => {
+        if (ref.current) OnChange(ref.current.value);
       }}
     >
       <InputGroup
-        width="60%"
+        width="50%"
         marginBottom={4}
         startElement={<MdDriveFileRenameOutline />}
       >

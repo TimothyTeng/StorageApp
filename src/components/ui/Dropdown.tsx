@@ -1,7 +1,8 @@
 import { Button, Menu, Portal } from "@chakra-ui/react";
+import type { LayoutItem } from "./DisplayModule";
 
 interface Props {
-  stores: string[];
+  stores: LayoutItem[];
   current: string;
   OnClick: (val: string) => void;
 }
@@ -17,13 +18,13 @@ function Dropdown({ stores, current, OnClick }: Props) {
       <Portal>
         <Menu.Positioner>
           <Menu.Content>
-            {stores.map((storeName, ind) => (
+            {stores.map((data, ind) => (
               <Menu.Item
-                value={storeName}
+                value={data.Name}
                 key={ind}
-                onClick={() => OnClick(storeName)}
+                onClick={() => OnClick(data.Name)}
               >
-                {storeName}
+                {data.Name}
               </Menu.Item>
             ))}
             <Menu.Item

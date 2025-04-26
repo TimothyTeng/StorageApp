@@ -8,7 +8,12 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy all API requests starting with /api to Flask
-      "/time": {
+      "/addlayout": {
+        target: "http://localhost:5000",
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, ""),
+      },
+      "/getdata": {
         target: "http://localhost:5000",
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ""),

@@ -1,4 +1,4 @@
-import { Button, Card, HStack, VStack } from "@chakra-ui/react";
+import { Button, Card, HStack } from "@chakra-ui/react";
 import { RiMailLine } from "react-icons/ri";
 
 function GridTypeSelector() {

@@ -1,10 +1,19 @@
-import { Card } from "@chakra-ui/react";
+import { Button, Card } from "@chakra-ui/react";
+import { RiMailLine } from "react-icons/ri";
 
-function AdditionalDetails() {
+interface Props {
+  OnClick: () => void;
+}
+
+function AdditionalDetails({ OnClick }: Props) {
   return (
     <Card.Root>
       <Card.Header />
-      <Card.Body />
+      <Card.Body>
+        <Button colorPalette="teal" variant="solid" onClick={OnClick}>
+          <RiMailLine /> Save Layout
+        </Button>
+      </Card.Body>
       <Card.Footer />
     </Card.Root>
   );

@@ -2,55 +2,70 @@ import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
 import SearchBar from "./SearchBar";
 import VisualLocationFinder from "./VisualLocationFinder";
 import ItemTable from "./ItemTable";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Dropdown from "./Dropdown";
 import { useNavigate } from "react-router-dom";
+import { useAxios } from "./hooks/useData";
+
+export type LayoutItem = {
+  LayoutID: number;
+  LocationID: number;
+  Name: string;
+  Grid: number[][];
+  Visible: string | null;
+};
 
 function DisplayModule() {
-  let data: { [key: string]: number[][] } = {
-    MS: [
-      [0, 0, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 1, 0, 1, 0, 0, 0],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 1, 0, 1, 0, 0, 1],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 2, 2, 0, 1, 1, 2, 2, 2, 1, 1, 1, 0, 0, 0],
-    ],
-    PS: [
-      [0, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 1],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [2, 2, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 2, 0],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 1, 0, 1, 0, 0],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 1, 0, 1, 0, 0],
-      [2, 2, 0, 0, 2, 2, 2, 2, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ],
+  const { post } = useAxios();
+  const [LayoutData, setLayoutData] = useState<LayoutItem[]>([]);
+  const onLoad = (LocationID: number) => {
+    post("/getdata", { LocationID: LocationID })
+      .then((data) => {
+        let temp: LayoutItem[] = [];
+        data.map((val: any) => {
+          temp.push({
+            LayoutID: val[0],
+            LocationID: val[1],
+            Name: val[2],
+            Grid: JSON.parse(val[3]),
+            Visible: val[4],
+          });
+        });
+        setLayoutData(temp);
+      })
+      .catch((err) => console.error("Post error", err));
   };
+  useEffect(() => {
+    onLoad(1);
+  }, []);
   let itemData = [
     {
       Name: "Jerry Can",
       Quantity: "2",
       Status: "Avaliable",
-      Store: "MS",
+      Store: "Test1",
       Location: "4,0",
     },
     {
       Name: "GS Table",
       Quantity: "2",
       Status: "In use",
-      Store: "PS",
+      Store: "Test2",
       Location: "5,0",
     },
   ];
   let [focus, setFocus] = useState<string>();
   const [nameQuery, setNameQuery] = useState("");
   const [locationQuery, setLocationQuery] = useState("");
-  const [storeNames, setStoreNames] = useState(["MS", "PS"]);
-  const [currentStore, setCurrentStore] = useState("MS");
+  const [currentStore, setCurrentStore] = useState("");
+  useEffect(() => {
+    if (LayoutData.length > 0) {
+      setCurrentStore(LayoutData[0].Name);
+    }
+  }, [LayoutData]);
+  const selectedLayout = LayoutData.find(
+    (layout) => layout.Name === currentStore
+  );
   const filteredItems = itemData.filter((item) =>
     item.Name.toLowerCase().includes(nameQuery.toLowerCase())
   );
@@ -82,7 +97,7 @@ function DisplayModule() {
               <HStack>
                 <Text>Current Store:</Text>
                 <Dropdown
-                  stores={storeNames}
+                  stores={LayoutData}
                   current={currentStore}
                   OnClick={(val) => {
                     if (
@@ -98,7 +113,7 @@ function DisplayModule() {
               </HStack>
             </HStack>
             <VisualLocationFinder
-              data={data[currentStore]}
+              data={selectedLayout?.Grid ?? []}
               focus={focus}
               OnClick={(location) => {
                 if (focus == location.toString()) {
